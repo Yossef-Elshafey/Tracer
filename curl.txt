@@ -1,0 +1,12 @@
+# task
+curl -w '\n' -H 'Content-Type:application/json' -d '{"title":"title2"}' "localhost:3000/task"
+curl -w '\n' -H 'Accept:application/json' -X GET "localhost:3000/task"
+curl -w '\n' -H 'Accept:application/json' -X GET "localhost:3000/task/1"
+curl -w '\n' -H 'Content-Type:application/json' -d '{"done":false}' -X PATCH "localhost:3000/task/2"
+curl -w '\n' -X DELETE "localhost:3000/task/2"
+# plan
+curl -w '\n' -H 'Content-Type:application/json' -d '{"plan":"Read A book", "steps":500, "finish_by":"2024-9-4"}' "localhost:3000/plan"
+curl -w '\n' -H 'Accept:application/json' -X GET "localhost:3000/task"
+curl -w '\n' -H 'Accept:application/json' -X GET "localhost:3000/task/1"
+curl -w '\n' -X DELETE "localhost:3000/plan/1"
+curl -w '\n' -H 'Content-Type:application/json' -d '{"progress":250}' -X PATCH "localhost:3000/plan/1"
