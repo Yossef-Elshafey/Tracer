@@ -6,7 +6,6 @@ import { Plan } from './entities/plan.entity';
 import { Repository } from 'typeorm';
 import { DatabaseService } from 'src/db/database.provider';
 import { Cron } from '@nestjs/schedule';
-import { log } from 'console';
 
 @Injectable()
 export class PlanService {
@@ -18,13 +17,14 @@ export class PlanService {
   @Cron('59 23 * * *')
   async isExpired() {
     const plans = await this.findAll();
-
-    for (const i in plans) {
-      const { finish_by, id } = plans[i];
-      const toMill = new Date(finish_by).setHours(0, 0, 0, 0);
-      const today = new Date().setHours(0, 0, 0, 0);
-      if (today >= toMill) {
-        await this.planRepo.update(id, { state: true });
+    if (plans) {
+      for (const i in plans) {
+        const { finish_by, id } = plans[i];
+        const toMill = new Date(finish_by).setHours(0, 0, 0, 0);
+        const today = new Date().setHours(0, 0, 0, 0);
+        if (today >= toMill) {
+          await this.planRepo.update(id, { state: true });
+        }
       }
     }
   }
@@ -49,21 +49,14 @@ export class PlanService {
     }
   }
 
-  private toPercentage(number: number, total: number): number {
-    return (number / total) * 100;
-  }
-
-  private toOrig(perc: number, total: number): number {
-    return total * (perc / 100);
-  }
-
   async update(id: number, updatePLanDto: UpdatePlanDto) {
     const instance = await this.findOne(id);
-    const orig = this.toOrig(instance.progress, instance.steps);
-    instance.progress = this.toPercentage(
-      orig + updatePLanDto.progress,
-      instance.steps,
-    );
+
+    instance.progress = (updatePLanDto.progress / instance.steps) * 100;
+    if (instance.progress >= 100) {
+      instance.progress = 100;
+    }
+
     return this.create(instance);
   }
 
