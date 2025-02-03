@@ -12,6 +12,6 @@ export class isBeforeToday implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments) {
-    return `${args.property} cannot be less than or equal today`;
+    return `${args.property} cannot be older than or equal today`;
   }
 }

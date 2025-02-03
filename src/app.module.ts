@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { TaskModule } from './task/task.module';
 import { PlanModule } from './plan/plan.module';
+import { NotesModule } from './notes/notes.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { PlanModule } from './plan/plan.module';
     DatabaseModule,
     TaskModule,
     PlanModule,
+    NotesModule,
   ],
   providers: [AppService],
   controllers: [AppController],

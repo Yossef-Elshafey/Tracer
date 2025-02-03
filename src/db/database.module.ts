@@ -1,27 +1,23 @@
 import { Global, Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DatabaseService } from './database.provider';
 
 @Global()
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mariadb',
-        host: configService.get('HOST'),
-        port: +configService.get('PORT'),
-        username: configService.get('USERNAME'),
-        password: configService.get('PASSWORD'),
-        database: configService.get('DATABASE'),
-        autoLoadEntities: true,
-        synchronize: true, // dev
-      }),
-      dataSourceFactory: async (options) => {
-        const dataSource = await new DataSource(options).initialize();
-        return dataSource;
+      useFactory: async (): Promise<TypeOrmModuleOptions> => {
+        // Return the options
+        return {
+          type: 'mariadb',
+          host: process.env['HOST'],
+          port: +process.env['PORT'],
+          username: process.env['USERNAME'],
+          password: process.env['PASSWORD'],
+          database: process.env['DATABASE'],
+          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+          synchronize: false,
+        };
       },
     }),
   ],

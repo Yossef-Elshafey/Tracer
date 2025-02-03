@@ -52,7 +52,9 @@ export class PlanService {
   async update(id: number, updatePLanDto: UpdatePlanDto) {
     const instance = await this.findOne(id);
 
-    instance.progress = (updatePLanDto.progress / instance.steps) * 100;
+    instance.progress = Math.trunc(
+      (updatePLanDto.progress / instance.steps) * 100,
+    );
     if (instance.progress >= 100) {
       instance.progress = 100;
     }

@@ -1,4 +1,5 @@
 /.vim
+tracer-backend.sh
 # compiled output
 /dist
 /node_modules
